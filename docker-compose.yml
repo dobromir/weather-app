@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+  web:
+    build: .
+    ports:
+      - "8080:80"
+
+    # Може да маунтнете само .env, src, и config.
+    # Така промените по .env и кода се отразяват веднага,
+    # но `vendor` и останалото остават вътре в контейнера.
+    volumes:
+      - ./.env:/var/www/html/.env
+      - ./src:/var/www/html/src
+      - ./config:/var/www/html/config
+      - ./templates:/var/www/html/templates
+
+    depends_on:
+      - cache
+    networks:
+      - app-network
+
+  cache:
+    image: redis:6
+    container_name: weather_service_cache
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+  test:
+    build: .
+    volumes:
+      - ./tests:/var/www/html/tests
+    depends_on:
+      - cache
+    networks:
+      - app-network
+    command: ["vendor/bin/phpunit", "tests"]
+
+networks:
+  app-network:
+    driver: bridge
