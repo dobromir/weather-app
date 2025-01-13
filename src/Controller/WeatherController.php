@@ -38,9 +38,14 @@ class WeatherController extends AbstractController
     public function __construct(CacheService $cacheService, ValidatorInterface $validator)
     {
         $this->cacheService = $cacheService;
-        $this->validator         = $validator;
+        $this->validator    = $validator;
     }
 
+    /**
+    * Show homepage.
+    *
+    * @return Response
+    */
     public function index(): Response
     {
         return $this->render('base.html.twig');
@@ -54,20 +59,20 @@ class WeatherController extends AbstractController
      */
     public function getWeather(Request $request): JsonResponse
     {
-        $city    = $request->query->get('city');
+        $city   = $request->query->get('city');
         $errors = $this->validator->validate($city, [new Assert\NotBlank()]);
 
         if (count($errors) > 0) {
             $response =  new JsonResponse(['message' => 'The "city" field is required and can\'t be empty.'], 422);
         } else {
             try {
-                $weather                    = $this->getWeatherData($city);
+                $weather            = $this->getWeatherData($city);
                 $currentTemperature = $weather['current'];
-                $averageTemp           = $weather['average'];
+                $averageTemp        = $weather['average'];
 
                 $response = new JsonResponse(
                     [
-                        'city'               => $city,
+                        'city'        => $city,
                         'temperature' => $currentTemperature .' ' .  TrendTemperatureService::calculate($currentTemperature, $averageTemp),
                         ]
                 );
@@ -95,13 +100,13 @@ class WeatherController extends AbstractController
 
         $weather = json_decode($this->cacheService->getValue("weather::$city"), true);
 
-        $currentTemperature  = $weather['current'];
-        $averageTemp            = round(
+        $currentTemperature = $weather['current'];
+        $averageTemp        = round(
             array_sum($weather['lastTenDays']) / count($weather['lastTenDays'])
         );
 
         return [
-            'current'  => $currentTemperature,
+            'current' => $currentTemperature,
             'average' => $averageTemp
         ];
     }
