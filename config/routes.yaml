@@ -1,0 +1,15 @@
+home:
+    path: /
+    controller: App\Controller\WeatherController::index
+    methods: GET
+
+api_post_show:
+    path:       /api/weather
+    controller: App\Controller\WeatherController::getWeather
+    methods:    GET|HEAD
+
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
