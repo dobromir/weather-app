@@ -16,8 +16,8 @@ class CacheServiceTest extends TestCase
             ->method('__call')
             ->willReturnCallback(function ($command, $args) {
                 return match ($command) {
-                    'set' => 'OK',
-                    'get' => 'testValue',
+                    'set'   => 'OK',
+                    'get'   => 'testValue',
                     default => true,
                 };
             });
