@@ -12,16 +12,16 @@ class WeatherApiClient
     public function fetchTemperature(string $city): array
     {
         $data = [
-            'Sofia'     =>  [
-                'current'         => rand(-10, 10),
+            'Sofia'  =>  [
+                'current'     => rand(-10, 10),
                 'lastTenDays' => self::getRandomTemperature()
             ],
             'London' => [
-                'current'         => rand(-10, 10),
+                'current'     => rand(-10, 10),
                 'lastTenDays' => self::getRandomTemperature()
             ],
-            'Paris'     => [
-                'current'         => rand(-10, 10),
+            'Paris'  => [
+                'current'     => rand(-10, 10),
                 'lastTenDays' => self::getRandomTemperature()
             ],
         ];
@@ -39,7 +39,7 @@ class WeatherApiClient
         $range = range(1, 10);
         return array_combine(
             array_map(fn($index) => date('Y-m-d', strtotime("-$index days")), $range),
-            array_map(fn()            => rand(-10, 10), $range)
+            array_map(fn()       => rand(-10, 10), $range)
         );
     }
 }
